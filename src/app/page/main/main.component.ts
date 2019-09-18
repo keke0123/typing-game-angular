@@ -6,6 +6,9 @@ import {Store} from '@ngrx/store';
 
 import * as fromMyStore from '../../store/reducers';
 import * as mainActions from '../../store/main/main.actions';
+import * as wordActions from '../../store/word/word.actions';
+import {MainService} from '../../service/main/main.service';
+import {WordActionTypes} from '../../store/word/word.actions';
 
 @Component({
   selector: 'app-main',
@@ -15,37 +18,35 @@ import * as mainActions from '../../store/main/main.actions';
 export class MainComponent implements OnInit {
 
   url = '';
+  score = 5;
   // destroy
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private router: Router,
     private zone: NgZone,
-    private store: Store<fromMyStore.State>
+    private store: Store<fromMyStore.State>,
+    private mainService: MainService,
   ) { }
 
   ngOnInit() {
-    // this.router.events.pipe(
-    //   takeUntil(this.destroy$),
-    //   filter((event) => {
-    //     return event instanceof NavigationEnd;
-    //   })
-    // )
-    //   .subscribe((val) => {
-    //     let urlArray = val['url'].split('/');
-    //     this.url = urlArray[urlArray.length - 1];
-    //     this.url = this.url === '' ? 'main' : this.url;
-    //     console.log('url', this.url);
-    //   })
+    // url
     this.store.select(fromMyStore.mystoreFeatureKey, 'main', 'url')
       .pipe(
         takeUntil(this.destroy$),
       )
       .subscribe((url) => {
         this.url = url;
-        console.log('url', this.url);
-        // console.log('test');
       });
+    // score
+    this.store.select(fromMyStore.mystoreFeatureKey, 'word', 'score')
+      .pipe(
+        takeUntil(this.destroy$),
+      )
+      .subscribe((score) => {
+        this.score = score;
+      });
+
   }
 
   ngOnDestroy() {
@@ -53,14 +54,14 @@ export class MainComponent implements OnInit {
     this.destroy$.unsubscribe();
   }
 
+  testBtn() {
+    // let test = this.mainService.getRandom();
+    this.store.dispatch(new wordActions.ScoreDown());
+    // console.log(test);
+  }
+
   togglePlay(url) {
-    // this.zone.run(() => {
-    //   this.router.navigate([`/${url}`]);
-    // });
-    // console.log('toggle');
     this.store.dispatch(new mainActions.ToggleGame(url));
-    // this.router.navigate([`/${url}`]);
-    // console.log(this.url);
   }
 
 }

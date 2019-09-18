@@ -7,6 +7,7 @@ import { MainComponent } from './page/main/main.component';
 import { DefaultComponent } from './layout/default/default.component';
 import { StoreModule } from '@ngrx/store';
 import * as fromMystore from './store/reducers';
+import {MainService} from './service/main/main.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,9 @@ import * as fromMystore from './store/reducers';
     StoreModule.forRoot({}),
     StoreModule.forFeature(fromMystore.mystoreFeatureKey, fromMystore.reducers, { metaReducers: fromMystore.metaReducers })
   ],
-  providers: [],
+  providers: [
+    MainService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

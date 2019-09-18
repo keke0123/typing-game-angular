@@ -1,11 +1,22 @@
 <div class="container">
   <div class="container-box">
+    <div class="score-box">
+      <div class="score">
+        점수 : {{score}}
+      </div>
+    </div>
     <div class="game-box">
+      <div *ngIf="score <= 0" class="game-over">
+        <div class="text">
+          Game Over!
+        </div>
+      </div>
     </div>
     <div class="form-box">
       <input type="text" placeholder="단어입력">
-      <button type="button" (click)="togglePlay('play')">start</button>
-<!--          <button type="button" routerLink="/play">start</button>-->
+      <button *ngIf="url == 'main'" type="button" (click)="togglePlay('play')">start</button>
+      <button *ngIf="url == 'play'" type="button" (click)="togglePlay('main')">stop</button>
+      <button (click)="testBtn()">test</button>
     </div>
   </div>
 </div>
