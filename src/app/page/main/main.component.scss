@@ -65,6 +65,11 @@
 
         .word {
           position: absolute;
+          display: none;
+
+          &.show {
+            display: block;
+          }
         }
       }
 

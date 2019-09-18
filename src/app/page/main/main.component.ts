@@ -115,9 +115,14 @@ export class MainComponent implements OnInit {
     this.store.dispatch(new wordActions.InputWords(word));
   }
 
-  // testBtn() {
-  //   // this.changeSpeed(100);
-  //   console.log(this.timeInterval$);
-  // }
+  testBtn() {
+    // this.changeSpeed(100);
+    // console.log(this.timeInterval$);
+    let temp = this.apiService.getWords();
+    temp.subscribe((val) => {
+      console.log(val);
+    })
+    // console.log(temp);
+  }
 
 }

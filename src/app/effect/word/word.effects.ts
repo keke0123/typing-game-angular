@@ -15,20 +15,28 @@ export class WordEffects {
   @Effect() getWord$ = this.actions$
     .pipe(
       ofType('[Word] Load Words'),
+      filter(() => this.word.length < 100),
       switchMap((payload) => {
         console.log(payload);
-        // return EMPTY;
-        return this.apiService.getWord(this.mainService.getRandom())
+        //
+        // return this.apiService.getWord(this.mainService.getRandom())
+        return this.apiService.getWords()
           .pipe(
+            filter(() => this.word.length < 30),
             map((res) => {
-              console.log('res', res);
+              // 받은 데이터 섞어주기
+              res = this.mainService.shuffle(res);
               return {
                 type: '[Word] Set Words',
                 payload: {
-                  offsetX: this.mainService.getRandom(),
-                  offsetY: 0,
-                  value: res['value'],
+                  res: res,
+                  fun: this.mainService.getRandom
                 }
+                // payload: {
+                //   offsetX: this.mainService.getRandom(),
+                //   offsetY: 0,
+                //   value: res['value'],
+                // }
               }
             }),
             catchError((res) => {
@@ -58,6 +66,7 @@ export class WordEffects {
     )
 
   answer = [];
+  word = [];
 
   constructor(
     private actions$: Actions,
@@ -68,6 +77,10 @@ export class WordEffects {
     this.store.select(fromMyStore.mystoreFeatureKey, 'word', 'answer')
       .subscribe((val) => {
         this.answer = val;
+      })
+    this.store.select(fromMyStore.mystoreFeatureKey, 'word', 'word')
+      .subscribe((val) => {
+        this.word = val;
       })
   }
 

@@ -13,4 +13,8 @@ export class ApiService {
   getWord(num) {
     return this.http.get(`http://localhost:3000/words/${num}`);
   }
+
+  getWords() {
+    return this.http.get(`http://localhost:3000/words`);
+  }
 }

@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="word-box">
-        <div *ngFor="let item of word" class="word" [ngStyle]="{top: item.offsetY+'%', left: item.offsetX+'%'}">
+        <div *ngFor="let item of word" class="word" [ngStyle]="{top: item.offsetY+'%', left: item.offsetX+'%'}" [ngClass]="{show: item.isActive === true}">
           {{ item.value }}
         </div>
       </div>
@@ -27,7 +27,7 @@
       <input type="text" placeholder="단어입력" (keyup.enter)="keyupEnter($event)">
       <button *ngIf="url == 'main'" type="button" (click)="togglePlay('play')">start</button>
       <button *ngIf="url == 'play'" type="button" (click)="togglePlay('main')">stop</button>
-<!--      <button type="button" (click)="testBtn()">test</button>-->
+      <button type="button" (click)="testBtn()">test</button>
     </div>
   </div>
 </div>

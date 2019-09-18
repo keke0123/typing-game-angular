@@ -17,7 +17,8 @@ export const initialState: State = {
       {
         offsetX: number,
         offsetY: number,
-        value: string
+        value: string,
+        isActive: false,
       }
     ]
     score = number
@@ -56,6 +57,22 @@ function InitWord(state: State, action: wordActions.WordActions): State {
 }
 
 function LoadWord(state: State, action: wordActions.WordActions): State {
+  let index = state.word.findIndex((val) => {
+    return val.isActive === false;
+  });
+  if(index >= 0) {
+    state.word[index].isActive = true;
+  }
+  state.word = state.word
+    .map((val) => {
+      if(val['isActive'] === true) {
+        val['offsetY'] = val['offsetY'] + 5;
+      }
+      if(val['offsetY'] >= 100) {
+        state = scoreDown(state, action);
+      }
+      return val;
+    });
   let temp = 3000 - (Math.floor(state.score / 10) * 500);
   if(temp < state.speed) {
     state.speed = temp;
@@ -67,17 +84,23 @@ function LoadWord(state: State, action: wordActions.WordActions): State {
 }
 
 function SetWord(state: State, action: wordActions.WordActions): State {
+  // console.log('set data');
   // console.log('action payload', action['payload']);
-  state.word = state.word
-    .map((val) => {
-      val['offsetY'] = val['offsetY'] + 5;
-      if(val['offsetY'] >= 100) {
-        state = scoreDown(state, action);
-      }
-      return val;
+  // console.warn('state word', state.word);
+  action['payload'].res.forEach((val, index) => {
+    // 20개 씩만 데이터 받기 위해
+    if(index > 20) {
+      return false;
+    }
+    state.word.push({
+      offsetX: action['payload'].fun(),
+      offsetY: -5,
+      value: val.value,
+      isActive: false,
     });
-  state.word.push(action['payload']);
-  // console.log('word array', state.word);
+  });
+  // state.word.push(action['payload']);
+  console.log('word array', state.word);
   return {
     ...state
   }
