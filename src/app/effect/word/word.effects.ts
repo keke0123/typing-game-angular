@@ -37,9 +37,6 @@ export class WordEffects {
             })
           )
       }),
-      // catchError(() => {
-      //   return EMPTY;
-      // })
     )
 
   @Effect() answer$ = this.actions$
