@@ -17,26 +17,18 @@ export class WordEffects {
       ofType('[Word] Load Words'),
       filter(() => this.word.length < 100),
       switchMap((payload) => {
-        console.log(payload);
+        // console.log(payload);
         //
-        // return this.apiService.getWord(this.mainService.getRandom())
         return this.apiService.getWords()
           .pipe(
             filter(() => this.word.length < 30),
             map((res) => {
-              // 받은 데이터 섞어주기
-              res = this.mainService.shuffle(res);
               return {
                 type: '[Word] Set Words',
                 payload: {
                   res: res,
                   fun: this.mainService.getRandom
                 }
-                // payload: {
-                //   offsetX: this.mainService.getRandom(),
-                //   offsetY: 0,
-                //   value: res['value'],
-                // }
               }
             }),
             catchError((res) => {

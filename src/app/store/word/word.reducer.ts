@@ -9,6 +9,7 @@ export interface State {
   score: number;
   answer: Array<any>;
   speed: number;
+  gameover: boolean;
 }
 
 export const initialState: State = {
@@ -27,6 +28,7 @@ export const initialState: State = {
   score: 5,
   answer: [],
   speed: 3000,
+  gameover: false,
 };
 
 export function reducer(state = initialState, action: wordActions.WordActions): State {
@@ -77,7 +79,6 @@ function LoadWord(state: State, action: wordActions.WordActions): State {
   if(temp < state.speed) {
     state.speed = temp;
   }
-  // state.speed = 3000 - (Math.floor(state.score / 10) * 500);
   return {
     ...state,
   }
@@ -88,10 +89,6 @@ function SetWord(state: State, action: wordActions.WordActions): State {
   // console.log('action payload', action['payload']);
   // console.warn('state word', state.word);
   action['payload'].res.forEach((val, index) => {
-    // 20개 씩만 데이터 받기 위해
-    if(index > 20) {
-      return false;
-    }
     state.word.push({
       offsetX: action['payload'].fun(),
       offsetY: -5,
@@ -159,12 +156,13 @@ function scoreDown(state: State, action: wordActions.WordActions): State {
   return {
     ...state,
     score: state.score - 1 >= 0 ? state.score - 1 : 0,
+    gameover: state.score - 1 <= 0 ? true : state.gameover
   }
 }
 
 function returnAnswer(state: State, action: wordActions.WordActions): State {
   if(state.answer.length > 0) {
-    state.answer.splice(0, 1);
+    state.answer.splice(0, state.answer.length);
   }
   return {
     ...state

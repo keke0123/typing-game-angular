@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="game-box">
-      <div *ngIf="score <= 0" class="game-over">
+      <div *ngIf="gameover == true && url == 'play'" class="game-over">
         <div class="text">
           Game Over!
         </div>
@@ -24,10 +24,10 @@
       </div>
     </div>
     <div class="form-box">
-      <input type="text" placeholder="단어입력" (keyup.enter)="keyupEnter($event)">
+      <input type="text" placeholder="단어입력" (keyup.enter)="keyupEnter($event)" [disabled]="gameover == true && url == 'play'">
       <button *ngIf="url == 'main'" type="button" (click)="togglePlay('play')">start</button>
       <button *ngIf="url == 'play'" type="button" (click)="togglePlay('main')">stop</button>
-      <button type="button" (click)="testBtn()">test</button>
+<!--      <button type="button" (click)="testBtn()">test</button>-->
     </div>
   </div>
 </div>

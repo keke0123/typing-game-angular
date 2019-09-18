@@ -27,6 +27,8 @@ export class MainComponent implements OnInit {
 
   speed = 3000;
 
+  gameover = false;
+
   timeInterval$: Subject<number> = new Subject<number>();
 
   // destroy
@@ -49,6 +51,8 @@ export class MainComponent implements OnInit {
     this.selectValue('word', 'word', 'word', this.url === 'play');
     // answer
     this.selectValue('answer', 'word', 'answer');
+    // gameover
+    this.selectValue('gameover', 'word', 'gameover');
 
     // speed
     this.store.select(fromMyStore.mystoreFeatureKey, 'word', 'speed')
@@ -115,14 +119,11 @@ export class MainComponent implements OnInit {
     this.store.dispatch(new wordActions.InputWords(word));
   }
 
-  testBtn() {
-    // this.changeSpeed(100);
-    // console.log(this.timeInterval$);
-    let temp = this.apiService.getWords();
-    temp.subscribe((val) => {
-      console.log(val);
-    })
-    // console.log(temp);
-  }
+  // testBtn() {
+  //   this.apiService.getTest()
+  //     .subscribe((res) => {
+  //       console.log('test', res);
+  //     });
+  // }
 
 }
