@@ -38,6 +38,7 @@
       height: 500px;
       border: 2px solid darkcyan;
       box-sizing: border-box;
+      overflow-y: hidden;
 
       .game-over {
         position: absolute;

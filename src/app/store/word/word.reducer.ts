@@ -7,6 +7,7 @@ export const wordFeatureKey = 'word';
 export interface State {
   word: Array<any>;
   score: number;
+  answer: string;
 }
 
 export const initialState: State = {
@@ -22,6 +23,7 @@ export const initialState: State = {
   */
   word: [],
   score: 5,
+  answer: '',
 };
 
 export function reducer(state = initialState, action: wordActions.WordActions): State {
@@ -36,6 +38,8 @@ export function reducer(state = initialState, action: wordActions.WordActions): 
       return LoadWord(state, action);
     case wordActions.WordActionTypes.SetWords:
       return SetWord(state, action);
+    case wordActions.WordActionTypes.InputWords:
+      return InputWord(state, action);
     default:
       return state;
   }
@@ -52,13 +56,37 @@ function LoadWord(state: State, action: wordActions.WordActions): State {
     ...state
   }
 }
+
 function SetWord(state: State, action: wordActions.WordActions): State {
-  console.log('action payload', action['payload']);
-  state.word.forEach((val) => {
-    val['offsetY'] = val['offsetY'] + 5;
-  });
+  // console.log('action payload', action['payload']);
+  state.word = state.word
+    .map((val) => {
+      val['offsetY'] = val['offsetY'] + 5;
+      if(val['offsetY'] >= 100) {
+        state = scoreDown(state, action);
+      }
+      return val;
+    });
   state.word.push(action['payload']);
-  console.log('word array', state.word);
+  // console.log('word array', state.word);
+  return {
+    ...state
+  }
+}
+
+function InputWord(state: State, action: wordActions.WordActions): State {
+  // state.word.find
+  // console.log(action);
+  let word = action['payload'];
+  let index = state.word.findIndex((val) => {
+    // console.log(val);
+    return val.value === word;
+  });
+  if(index >= 0) {
+    state.word.splice(index, 1);
+    state = scoreUp(state, action);
+  }
+  // console.log('index', index);
   return {
     ...state
   }
@@ -72,8 +100,20 @@ function scoreUp(state: State, action: wordActions.WordActions): State {
 }
 
 function scoreDown(state: State, action: wordActions.WordActions): State {
+  state.word = state.word.filter((val) => {
+    if(val['offsetY'] >= 100) {
+      return false;
+    }
+    return true;
+  });
   return {
     ...state,
-    score: state.score - 1,
+    score: state.score - 1 >= 0 ? state.score - 1 : 0,
   }
 }
+
+// function popAnswer(state: State, action: wordActions.WordActions): State {
+//   return {
+//     ...state
+//   }
+// }

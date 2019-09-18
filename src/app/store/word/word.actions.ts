@@ -6,6 +6,7 @@ export enum WordActionTypes {
   InitWord = '[Word] Init Word',
   LoadWords = '[Word] Load Words',
   SetWords = '[Word] Set Words',
+  InputWords = '[Word] Input Words'
 }
 
 export class ScoreUp implements Action {
@@ -29,5 +30,11 @@ export class SetWords implements Action {
   constructor(public payload: any) {}
 }
 
+export class InputWords implements Action {
+  readonly type = WordActionTypes.InputWords;
 
-export type WordActions = LoadWords | SetWords | ScoreUp | ScoreDown | InitWord;
+  constructor(public payload: any) {}
+}
+
+
+export type WordActions = LoadWords | SetWords | InputWords | ScoreUp | ScoreDown | InitWord;

@@ -95,4 +95,11 @@ export class MainComponent implements OnInit {
     this.store.dispatch(new mainActions.ToggleGame(url));
   }
 
+  keyupEnter(event) {
+    // console.log('event', event);
+    let word = event.target.value;
+    event.target.value = '';
+    this.store.dispatch(new wordActions.InputWords(word));
+  }
+
 }
