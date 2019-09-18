@@ -1,7 +1,7 @@
 import {Component, NgZone, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {iif, interval, Observable, of, Subject} from 'rxjs';
-import {filter, switchMap, take, takeUntil, takeWhile, timeInterval} from 'rxjs/operators';
+import {filter, map, switchMap, take, takeUntil, takeWhile, timeInterval} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 
 import * as fromMyStore from '../../store/reducers';
@@ -42,43 +42,13 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
     // url
-    this.store.select(fromMyStore.mystoreFeatureKey, 'main', 'url')
-      .pipe(
-        takeUntil(this.destroy$),
-      )
-      .subscribe((url) => {
-        this.url = url;
-      });
-
+    this.selectValue('url', 'main', 'url');
     // score
-    this.store.select(fromMyStore.mystoreFeatureKey, 'word', 'score')
-      .pipe(
-        takeUntil(this.destroy$),
-      )
-      .subscribe((score) => {
-        this.score = score;
-      });
-
+    this.selectValue('score', 'word', 'score');
     // word
-    this.store.select(fromMyStore.mystoreFeatureKey, 'word', 'word')
-      .pipe(
-        takeUntil(this.destroy$),
-        filter(() => this.url === 'play'),
-      )
-      .subscribe((word) => {
-        // console.log('select word', word);
-        this.word = word;
-      });
-
+    this.selectValue('word', 'word', 'word', this.url === 'play');
     // answer
-    this.store.select(fromMyStore.mystoreFeatureKey, 'word', 'answer')
-      .pipe(
-        takeUntil(this.destroy$),
-      )
-      .subscribe((answer) => {
-        // console.log('answer', answer);
-        this.answer = answer;
-      });
+    this.selectValue('answer', 'word', 'answer');
 
     // speed
     this.store.select(fromMyStore.mystoreFeatureKey, 'word', 'speed')
@@ -89,7 +59,7 @@ export class MainComponent implements OnInit {
         console.log('speed', speed);
         this.speed = speed;
         this.changeSpeed(this.speed);
-      })
+      });
 
     this.timeInterval$
       .pipe(
@@ -97,18 +67,16 @@ export class MainComponent implements OnInit {
           interval(num)
             .pipe(
               takeUntil(this.destroy$),
+              filter(() => this.url === 'play')
             )
         ),
       )
       .subscribe((time) => {
         console.log('time', time);
         this.store.dispatch(new wordActions.LoadWords(time));
-      })
+      });
 
-    if(this.url === 'play') {
-      this.changeSpeed(this.speed);
-    }
-
+    this.changeSpeed(this.speed);
   }
 
   // timer 수정
@@ -116,14 +84,21 @@ export class MainComponent implements OnInit {
     this.timeInterval$.next(num);
   }
 
+  // select
+  selectValue(ref, reducer, state, fil=true) {
+    this.store.select(fromMyStore.mystoreFeatureKey, reducer, state)
+      .pipe(
+        takeUntil(this.destroy$),
+        filter(() => fil)
+      )
+      .subscribe((val) => {
+        this[ref] = val;
+      });
+  }
+
   ngOnDestroy() {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
-  }
-
-  testBtn() {
-    // this.changeSpeed(100);
-    console.log(this.timeInterval$);
   }
 
   togglePlay(url) {
@@ -139,5 +114,10 @@ export class MainComponent implements OnInit {
     }
     this.store.dispatch(new wordActions.InputWords(word));
   }
+
+  // testBtn() {
+  //   // this.changeSpeed(100);
+  //   console.log(this.timeInterval$);
+  // }
 
 }
