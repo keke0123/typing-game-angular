@@ -1,7 +1,7 @@
 import {Component, NgZone, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {interval, Observable, Subject} from 'rxjs';
-import {filter, takeUntil, takeWhile, timeInterval} from 'rxjs/operators';
+import {iif, interval, Observable, of, Subject} from 'rxjs';
+import {filter, take, takeUntil, takeWhile, timeInterval} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 
 import * as fromMyStore from '../../store/reducers';
@@ -23,6 +23,12 @@ export class MainComponent implements OnInit {
 
   word = [];
 
+  answer = [];
+
+  speed = 3000;
+
+  timeObservable: Observable<number>;
+
   // destroy
   destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -43,6 +49,7 @@ export class MainComponent implements OnInit {
       .subscribe((url) => {
         this.url = url;
       });
+
     // score
     this.store.select(fromMyStore.mystoreFeatureKey, 'word', 'score')
       .pipe(
@@ -59,23 +66,38 @@ export class MainComponent implements OnInit {
         filter(() => this.url === 'play'),
       )
       .subscribe((word) => {
-        console.log('select word', word);
+        // console.log('select word', word);
         this.word = word;
       });
 
+    // answer
+    this.store.select(fromMyStore.mystoreFeatureKey, 'word', 'answer')
+      .pipe(
+        takeUntil(this.destroy$),
+      )
+      .subscribe((answer) => {
+        // console.log('answer', answer);
+        this.answer = answer;
+      });
+
+    // speed
+    this.store.select(fromMyStore.mystoreFeatureKey, 'word', 'speed')
+      .pipe(
+        takeUntil(this.destroy$),
+      )
+      .subscribe((speed) => {
+        console.log('speed', speed);
+        this.speed = speed;
+      })
+    
     // timer
     interval(3000).pipe(
       takeUntil(this.destroy$),
-      filter(() => this.url === 'play')
+      filter(() => this.url === 'play'),
     )
       .subscribe((time) => {
-        console.log('time', time);
-        // word dispatch
-        this.store.dispatch(new wordActions.LoadWords());
-        // this.apiService.getWord(this.mainService.getRandom())
-        //   .subscribe((res) => {
-        //     console.log(res);
-        //   })
+        // console.log('time', time);
+        this.store.dispatch(new wordActions.LoadWords(time));
       })
 
   }
@@ -87,7 +109,7 @@ export class MainComponent implements OnInit {
 
   testBtn() {
     // let test = this.mainService.getRandom();
-    this.store.dispatch(new wordActions.ScoreDown());
+    // this.store.dispatch(new wordActions.ScoreDown());
     // console.log(test);
   }
 
@@ -99,6 +121,9 @@ export class MainComponent implements OnInit {
     // console.log('event', event);
     let word = event.target.value;
     event.target.value = '';
+    if(this.url !== 'play') {
+      return false;
+    }
     this.store.dispatch(new wordActions.InputWords(word));
   }
 

@@ -16,9 +16,11 @@
           {{ item.value }}
         </div>
       </div>
-<!--      <div class="react-box">-->
-<!--        correct-->
-<!--      </div>-->
+      <div class="react-box">
+        <div *ngFor="let item of answer" class="answer-box">
+          <div class="answer" [ngClass]="[item.color]">{{ item.value }}</div>
+        </div>
+      </div>
     </div>
     <div class="form-box">
       <input type="text" placeholder="단어입력" (keyup.enter)="keyupEnter($event)">

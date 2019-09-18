@@ -7,7 +7,8 @@ export const wordFeatureKey = 'word';
 export interface State {
   word: Array<any>;
   score: number;
-  answer: string;
+  answer: Array<any>;
+  speed: number;
 }
 
 export const initialState: State = {
@@ -23,7 +24,8 @@ export const initialState: State = {
   */
   word: [],
   score: 5,
-  answer: '',
+  answer: [],
+  speed: 3000,
 };
 
 export function reducer(state = initialState, action: wordActions.WordActions): State {
@@ -40,6 +42,8 @@ export function reducer(state = initialState, action: wordActions.WordActions): 
       return SetWord(state, action);
     case wordActions.WordActionTypes.InputWords:
       return InputWord(state, action);
+    case wordActions.WordActionTypes.ReturnAnswer:
+      return returnAnswer(state, action);
     default:
       return state;
   }
@@ -52,8 +56,10 @@ function InitWord(state: State, action: wordActions.WordActions): State {
 }
 
 function LoadWord(state: State, action: wordActions.WordActions): State {
+  console.log('action', Math.floor(action['payload'] / 10));
+  state.speed = 3000 / (Math.floor(action['payload'] / 10) + 1);
   return {
-    ...state
+    ...state,
   }
 }
 
@@ -85,8 +91,26 @@ function InputWord(state: State, action: wordActions.WordActions): State {
   if(index >= 0) {
     state.word.splice(index, 1);
     state = scoreUp(state, action);
+    //
+    state.answer.push(
+      {
+        value: 'correct',
+        isShow: true,
+        color: 'blue',
+      }
+    );
+  } else {
+    //
+    state.answer.push(
+      {
+        value: 'wrong',
+        isShow: true,
+        color: 'red',
+      }
+    );
   }
-  // console.log('index', index);
+  console.log('index', index);
+  console.log(state.answer);
   return {
     ...state
   }
@@ -112,8 +136,11 @@ function scoreDown(state: State, action: wordActions.WordActions): State {
   }
 }
 
-// function popAnswer(state: State, action: wordActions.WordActions): State {
-//   return {
-//     ...state
-//   }
-// }
+function returnAnswer(state: State, action: wordActions.WordActions): State {
+  if(state.answer.length > 0) {
+    state.answer.splice(0, 1);
+  }
+  return {
+    ...state
+  }
+}
