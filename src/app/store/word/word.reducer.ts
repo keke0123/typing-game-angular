@@ -56,8 +56,11 @@ function InitWord(state: State, action: wordActions.WordActions): State {
 }
 
 function LoadWord(state: State, action: wordActions.WordActions): State {
-  console.log('action', Math.floor(action['payload'] / 10));
-  state.speed = 3000 / (Math.floor(action['payload'] / 10) + 1);
+  let temp = 3000 - (Math.floor(state.score / 10) * 500);
+  if(temp < state.speed) {
+    state.speed = temp;
+  }
+  // state.speed = 3000 - (Math.floor(state.score / 10) * 500);
   return {
     ...state,
   }

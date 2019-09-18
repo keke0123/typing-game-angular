@@ -1,7 +1,7 @@
 import {Component, NgZone, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {iif, interval, Observable, of, Subject} from 'rxjs';
-import {filter, take, takeUntil, takeWhile, timeInterval} from 'rxjs/operators';
+import {filter, switchMap, take, takeUntil, takeWhile, timeInterval} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 
 import * as fromMyStore from '../../store/reducers';
@@ -27,7 +27,7 @@ export class MainComponent implements OnInit {
 
   speed = 3000;
 
-  timeObservable: Observable<number>;
+  timeInterval$: Subject<number> = new Subject<number>();
 
   // destroy
   destroy$: Subject<boolean> = new Subject<boolean>();
@@ -88,18 +88,32 @@ export class MainComponent implements OnInit {
       .subscribe((speed) => {
         console.log('speed', speed);
         this.speed = speed;
+        this.changeSpeed(this.speed);
       })
-    
-    // timer
-    interval(3000).pipe(
-      takeUntil(this.destroy$),
-      filter(() => this.url === 'play'),
-    )
+
+    this.timeInterval$
+      .pipe(
+        switchMap((num) =>
+          interval(num)
+            .pipe(
+              takeUntil(this.destroy$),
+            )
+        ),
+      )
       .subscribe((time) => {
-        // console.log('time', time);
+        console.log('time', time);
         this.store.dispatch(new wordActions.LoadWords(time));
       })
 
+    if(this.url === 'play') {
+      this.changeSpeed(this.speed);
+    }
+
+  }
+
+  // timer 수정
+  changeSpeed(num) {
+    this.timeInterval$.next(num);
   }
 
   ngOnDestroy() {
@@ -108,9 +122,8 @@ export class MainComponent implements OnInit {
   }
 
   testBtn() {
-    // let test = this.mainService.getRandom();
-    // this.store.dispatch(new wordActions.ScoreDown());
-    // console.log(test);
+    // this.changeSpeed(100);
+    console.log(this.timeInterval$);
   }
 
   togglePlay(url) {

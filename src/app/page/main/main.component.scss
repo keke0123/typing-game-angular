@@ -24,7 +24,7 @@
         justify-content: center;
       }
       .score {
-        width: 100px;
+        width: 170px;
         border: 2px solid tomato;
         display: flex;
         justify-content: center;
@@ -39,6 +39,7 @@
       border: 2px solid darkcyan;
       box-sizing: border-box;
       overflow-y: hidden;
+      overflow-x: hidden;
 
       .game-over {
         position: absolute;
@@ -58,7 +59,7 @@
       .word-box {
         position: absolute;
         //left: 15%;
-        width: 90%;
+        width: 85%;
         height: 100%;
         //border: 1px solid tomato;
 
