@@ -25,7 +25,18 @@ export class MainComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    // this.router.events.pipe(
+    //   takeUntil(this.destroy$),
+    //   filter((event) => {
+    //     return event instanceof NavigationEnd;
+    //   })
+    // )
+    //   .subscribe((val) => {
+    //     let urlArray = val['url'].split('/');
+    //     this.url = urlArray[urlArray.length - 1];
+    //     this.url = this.url === '' ? 'main' : this.url;
+    //     console.log('url', this.url);
+    //   })
     this.store.select(fromMyStore.mystoreFeatureKey, 'main', 'url')
       .pipe(
         takeUntil(this.destroy$),
