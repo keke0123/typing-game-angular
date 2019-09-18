@@ -11,6 +11,14 @@
           Game Over!
         </div>
       </div>
+      <div class="word-box">
+        <div *ngFor="let item of word" class="word" [ngStyle]="{top: item.offsetY+'%', left: item.offsetX+'%'}">
+          {{ item.value }}
+        </div>
+      </div>
+<!--      <div class="react-box">-->
+<!--        correct-->
+<!--      </div>-->
     </div>
     <div class="form-box">
       <input type="text" placeholder="단어입력">

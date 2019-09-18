@@ -8,6 +8,10 @@ import { DefaultComponent } from './layout/default/default.component';
 import { StoreModule } from '@ngrx/store';
 import * as fromMystore from './store/reducers';
 import {MainService} from './service/main/main.service';
+import {ApiService} from './service/api/api.service';
+import {HttpClientModule} from '@angular/common/http';
+import { EffectsModule } from '@ngrx/effects';
+import { WordEffects } from './effect/word/word.effects';
 
 @NgModule({
   declarations: [
@@ -18,11 +22,15 @@ import {MainService} from './service/main/main.service';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     StoreModule.forRoot({}),
-    StoreModule.forFeature(fromMystore.mystoreFeatureKey, fromMystore.reducers, { metaReducers: fromMystore.metaReducers })
+    StoreModule.forFeature(fromMystore.mystoreFeatureKey, fromMystore.reducers, { metaReducers: fromMystore.metaReducers }),
+    EffectsModule.forRoot([]),
+    EffectsModule.forFeature([WordEffects]),
   ],
   providers: [
     MainService,
+    ApiService,
   ],
   bootstrap: [AppComponent]
 })

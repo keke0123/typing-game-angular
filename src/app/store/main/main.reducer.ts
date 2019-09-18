@@ -23,7 +23,7 @@ export function reducer(state = initialState, action: mainActions.MainActions): 
 }
 
 function toggleUrl(state: State, action: mainActions.ToggleGame): State {
-  console.log('state', state);
+  // console.log('state', state);
   return {
     ...state,
     url: action.payload

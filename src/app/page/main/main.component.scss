@@ -17,6 +17,12 @@
       display: flex;
       justify-content: flex-end;
 
+      .time {
+        width: 100px;
+        border: 2px solid tomato;
+        display: flex;
+        justify-content: center;
+      }
       .score {
         width: 100px;
         border: 2px solid tomato;
@@ -47,6 +53,27 @@
           font-weight: bold;
         }
       }
+
+      .word-box {
+        position: absolute;
+        //left: 15%;
+        width: 90%;
+        height: 100%;
+        //border: 1px solid tomato;
+
+        .word {
+          position: absolute;
+        }
+      }
+
+      //.react-box {
+      //  position: absolute;
+      //  width: 100%;
+      //  height: 100%;
+      //  display: flex;
+      //  justify-content: center;
+      //  align-items: center;
+      //}
     }
 
     .form-box {

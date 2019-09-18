@@ -32,7 +32,7 @@ export class DefaultComponent implements OnInit {
         this.router.navigate([`/${url}`]);
         console.log('url', url);
         if(url === 'play') {
-          console.log('init');
+          console.log('init score');
           this.store.dispatch(new wordActions.InitWord());
         }
         // console.log('test');

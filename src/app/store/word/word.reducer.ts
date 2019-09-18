@@ -20,11 +20,7 @@ export const initialState: State = {
     ]
     score = number
   */
-  word: [
-    {
-
-    }
-  ],
+  word: [],
   score: 5,
 };
 
@@ -36,6 +32,10 @@ export function reducer(state = initialState, action: wordActions.WordActions): 
       return scoreDown(state, action);
     case wordActions.WordActionTypes.InitWord:
       return InitWord(state, action);
+    case wordActions.WordActionTypes.LoadWords:
+      return LoadWord(state, action);
+    case wordActions.WordActionTypes.SetWords:
+      return SetWord(state, action);
     default:
       return state;
   }
@@ -44,6 +44,23 @@ export function reducer(state = initialState, action: wordActions.WordActions): 
 function InitWord(state: State, action: wordActions.WordActions): State {
   return {
     ...initialState
+  }
+}
+
+function LoadWord(state: State, action: wordActions.WordActions): State {
+  return {
+    ...state
+  }
+}
+function SetWord(state: State, action: wordActions.WordActions): State {
+  console.log('action payload', action['payload']);
+  state.word.forEach((val) => {
+    val['offsetY'] = val['offsetY'] + 5;
+  });
+  state.word.push(action['payload']);
+  console.log('word array', state.word);
+  return {
+    ...state
   }
 }
 

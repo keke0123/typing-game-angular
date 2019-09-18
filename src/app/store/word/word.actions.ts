@@ -1,14 +1,11 @@
 import { Action } from '@ngrx/store';
 
 export enum WordActionTypes {
-  LoadWords = '[Word] Load Words',
   ScoreUp = '[Word] Score Up',
   ScoreDown = '[Word] Score Down',
   InitWord = '[Word] Init Word',
-}
-
-export class LoadWords implements Action {
-  readonly type = WordActionTypes.LoadWords;
+  LoadWords = '[Word] Load Words',
+  SetWords = '[Word] Set Words',
 }
 
 export class ScoreUp implements Action {
@@ -22,5 +19,15 @@ export class InitWord implements Action {
   readonly type = WordActionTypes.InitWord;
 }
 
+export class LoadWords implements Action {
+  readonly type = WordActionTypes.LoadWords;
+}
 
-export type WordActions = LoadWords | ScoreUp | ScoreDown | InitWord;
+export class SetWords implements Action {
+  readonly type = WordActionTypes.SetWords;
+
+  constructor(public payload: any) {}
+}
+
+
+export type WordActions = LoadWords | SetWords | ScoreUp | ScoreDown | InitWord;
