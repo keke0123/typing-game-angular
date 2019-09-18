@@ -124,6 +124,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "typing-game-angular"
+    }
+  },
+  "defaultProject": "typing-game-angular",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }
