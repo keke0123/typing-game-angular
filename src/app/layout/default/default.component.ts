@@ -30,9 +30,9 @@ export class DefaultComponent implements OnInit {
       .subscribe((url) => {
         // this.url = url;
         this.router.navigate([`/${url}`]);
-        console.log('url', url);
+        // console.log('url', url);
         if(url === 'play') {
-          console.log('init score');
+          // console.log('init score');
           this.store.dispatch(new wordActions.InitWord());
         }
         // console.log('test');

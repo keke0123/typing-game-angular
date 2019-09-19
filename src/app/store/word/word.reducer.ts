@@ -97,7 +97,7 @@ function SetWord(state: State, action: wordActions.WordActions): State {
     });
   });
   // state.word.push(action['payload']);
-  console.log('word array', state.word);
+  // console.log('word array', state.word);
   return {
     ...state
   }
@@ -109,7 +109,7 @@ function InputWord(state: State, action: wordActions.WordActions): State {
   let word = action['payload'];
   let index = state.word.findIndex((val) => {
     // console.log(val);
-    return val.value === word;
+    return (val.value === word && val.isActive === true);
   });
   if(index >= 0) {
     state.word.splice(index, 1);
@@ -132,8 +132,8 @@ function InputWord(state: State, action: wordActions.WordActions): State {
       }
     );
   }
-  console.log('index', index);
-  console.log(state.answer);
+  // console.log('index', index);
+  // console.log(state.answer);
   return {
     ...state
   }

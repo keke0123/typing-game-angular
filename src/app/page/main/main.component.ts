@@ -60,7 +60,7 @@ export class MainComponent implements OnInit {
         takeUntil(this.destroy$),
       )
       .subscribe((speed) => {
-        console.log('speed', speed);
+        // console.log('speed', speed);
         this.speed = speed;
         this.changeSpeed(this.speed);
       });
@@ -76,7 +76,7 @@ export class MainComponent implements OnInit {
         ),
       )
       .subscribe((time) => {
-        console.log('time', time);
+        // console.log('time', time);
         this.store.dispatch(new wordActions.LoadWords(time));
       });
 
