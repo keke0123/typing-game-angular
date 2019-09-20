@@ -62,80 +62,123 @@ function LoadWord(state: State, action: wordActions.WordActions): State {
   let index = state.word.findIndex((val) => {
     return val.isActive === false;
   });
-  if(index >= 0) {
-    state.word[index].isActive = true;
-  }
-  state.word = state.word
-    .map((val) => {
+  let scoreDownCount = 0;
+  const word = state.word
+    .filter((val) => {
+      if(val['offsetY'] >= 100) {
+        scoreDownCount++;
+        return false;
+      }
+      return true;
+    })
+    .map((val, i) => {
+      if(i == index && index >= 0) {
+        val.isActive = true;
+      }
       if(val['isActive'] === true) {
         val['offsetY'] = val['offsetY'] + 5;
-      }
-      if(val['offsetY'] >= 100) {
-        state = scoreDown(state, action);
       }
       return val;
     });
   let temp = 3000 - (Math.floor(state.score / 10) * 500);
-  if(temp < state.speed) {
-    state.speed = temp;
-  }
+  // console.log('load',
+  //   {
+  //     ...state,
+  //     speed: temp < state.speed ? temp : state.speed,
+  //     word: [
+  //       ...word
+  //     ],
+  //     score: state.score - scoreDownCount
+  //   })
   return {
     ...state,
+    speed: temp < state.speed ? temp : state.speed,
+    word: [
+      ...word
+    ],
+    score: state.score - scoreDownCount
   }
 }
 
 function SetWord(state: State, action: wordActions.WordActions): State {
-  // console.log('set data');
-  // console.log('action payload', action['payload']);
-  // console.warn('state word', state.word);
-  action['payload'].res.forEach((val, index) => {
-    state.word.push({
+  /*
+  *  state immutable 에 위반되는 실책
+  *  state 를 직접 고치게되면 return 되는 곳 어디에서 무슨 오류가 생길지 모른다.
+  *  라이브러리의 의도와는 맞지 않다.
+  */
+  // action['payload'].res.forEach((val, index) => {
+  //   state.word.push({
+  //     offsetX: action['payload'].fun(),
+  //     offsetY: -5,
+  //     value: val.value,
+  //     isActive: false,
+  //   });
+  // });
+  const word = action['payload'].res.map((val, index) => {
+    return {
       offsetX: action['payload'].fun(),
       offsetY: -5,
       value: val.value,
       isActive: false,
-    });
+    };
   });
-  // state.word.push(action['payload']);
-  // console.log('word array', state.word);
+  // console.log('set',
+  //   {
+  //   ...state,
+  //     word: [
+  //     ...state.word,
+  //     ...word
+  //   ],
+  //   }
+  // )
   return {
-    ...state
+    ...state,
+    word: [
+      ...state.word,
+      ...word
+    ],
   }
 }
 
 function InputWord(state: State, action: wordActions.WordActions): State {
   // state.word.find
   // console.log(action);
-  let word = action['payload'];
+  let words = action['payload'];
   let index = state.word.findIndex((val) => {
     // console.log(val);
-    return (val.value === word && val.isActive === true);
+    return (val.value === words && val.isActive === true);
   });
-  if(index >= 0) {
-    state.word.splice(index, 1);
-    state = scoreUp(state, action);
-    //
-    state.answer.push(
-      {
-        value: 'correct',
-        isShow: true,
-        color: 'blue',
-      }
-    );
+  let scoreUpCount = 0;
+  let answer = {};
+  const word = state.word.map((val, i) => {
+    if(i == index && index >= 0) {
+      scoreUpCount++;
+      return false;
+    }
+    return val;
+  })
+  if(scoreUpCount > 0) {
+    answer = {
+      value: 'correct',
+      isShow: true,
+      color: 'blue',
+    }
   } else {
-    //
-    state.answer.push(
-      {
-        value: 'wrong',
-        isShow: true,
-        color: 'red',
-      }
-    );
+    answer = {
+      value: 'wrong',
+      isShow: true,
+      color: 'red',
+    }
   }
-  // console.log('index', index);
-  // console.log(state.answer);
+  // console.log('input', state.answer.concat(answer));
+  // console.log('answer', state.answer);
   return {
-    ...state
+    ...state,
+    word: [
+      ...word
+    ],
+    score: state.score + scoreUpCount,
+    answer: state.answer.concat(answer)
   }
 }
 
@@ -147,7 +190,7 @@ function scoreUp(state: State, action: wordActions.WordActions): State {
 }
 
 function scoreDown(state: State, action: wordActions.WordActions): State {
-  state.word = state.word.filter((val) => {
+  const word = state.word.filter((val) => {
     if(val['offsetY'] >= 100) {
       return false;
     }
@@ -155,16 +198,21 @@ function scoreDown(state: State, action: wordActions.WordActions): State {
   });
   return {
     ...state,
+    word: [
+      ...state.word,
+      word
+    ],
     score: state.score - 1 >= 0 ? state.score - 1 : 0,
     gameover: state.score - 1 <= 0 ? true : state.gameover
   }
 }
 
 function returnAnswer(state: State, action: wordActions.WordActions): State {
-  if(state.answer.length > 0) {
-    state.answer.splice(0, state.answer.length);
-  }
+  // if(state.answer.length > 0) {
+  //   state.answer.splice(0, state.answer.length);
+  // }
   return {
-    ...state
+    ...state,
+    answer: []
   }
 }
