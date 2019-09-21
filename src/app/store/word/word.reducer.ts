@@ -64,13 +64,6 @@ function LoadWord(state: State, action: wordActions.WordActions): State {
   });
   let scoreDownCount = 0;
   const word = state.word
-    .filter((val) => {
-      if(val['offsetY'] >= 100) {
-        scoreDownCount++;
-        return false;
-      }
-      return true;
-    })
     .map((val, i) => {
       if(i == index && index >= 0) {
         val.isActive = true;
@@ -79,6 +72,13 @@ function LoadWord(state: State, action: wordActions.WordActions): State {
         val['offsetY'] = val['offsetY'] + 5;
       }
       return val;
+    })
+    .filter((val) => {
+      if(val['offsetY'] >= 100) {
+        scoreDownCount++;
+        return false;
+      }
+      return true;
     });
   let temp = 3000 - (Math.floor(state.score / 10) * 500);
   // console.log('load',
