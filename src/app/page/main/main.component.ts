@@ -2,7 +2,7 @@ import {Component, NgZone, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {iif, interval, Observable, of, Subject} from 'rxjs';
 import {filter, map, switchMap, take, takeUntil, takeWhile, timeInterval} from 'rxjs/operators';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 
 import * as fromMyStore from '../../store/reducers';
 import * as mainActions from '../../store/main/main.actions';
@@ -10,6 +10,9 @@ import * as wordActions from '../../store/word/word.actions';
 import {MainService} from '../../service/main/main.service';
 import {WordActionTypes} from '../../store/word/word.actions';
 import {ApiService} from '../../service/api/api.service';
+import {wordFeatureKey} from '../../store/word/word.reducer';
+import {selectWords} from '../../store/reducers';
+import {state} from '@angular/animations';
 
 @Component({
   selector: 'app-main',
@@ -17,6 +20,8 @@ import {ApiService} from '../../service/api/api.service';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
+  test:any;
+  test2:any;
 
   url = '';
   score = 5;
@@ -43,6 +48,11 @@ export class MainComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // test
+    this.test = this.store.pipe(select(fromMyStore.selectScore));
+    console.warn('test', this.test);
+    // test
+
     // url
     this.selectValue('url', 'main', 'url');
     // score
@@ -119,11 +129,12 @@ export class MainComponent implements OnInit {
     this.store.dispatch(new wordActions.InputWords(word));
   }
 
-  // testBtn() {
-  //   this.apiService.getTest()
-  //     .subscribe((res) => {
-  //       console.log('test', res);
-  //     });
-  // }
+  testBtn() {
+    // this.apiService.getTest()
+    //   .subscribe((res) => {
+    //     console.log('test', res);
+    //   });
+    console.log(this.test);
+  }
 
 }
