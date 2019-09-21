@@ -96,7 +96,9 @@ function LoadWord(state: State, action: wordActions.WordActions): State {
     word: [
       ...word
     ],
-    score: state.score - scoreDownCount
+    score: state.score - scoreDownCount >= 0 ? state.score - scoreDownCount : 0,
+    gameover: state.score - 1 <= 0 ? true : state.gameover
+    // score: state.score - 1 >= 0 ? state.score - 1 : 0,
   }
 }
 
