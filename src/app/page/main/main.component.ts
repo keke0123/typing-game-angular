@@ -11,7 +11,6 @@ import {MainService} from '../../service/main/main.service';
 import {WordActionTypes} from '../../store/word/word.actions';
 import {ApiService} from '../../service/api/api.service';
 import {wordFeatureKey} from '../../store/word/word.reducer';
-import {selectWords} from '../../store/reducers';
 import {state} from '@angular/animations';
 
 @Component({
@@ -49,8 +48,13 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
     // test
-    this.test = this.store.pipe(select(fromMyStore.selectScore));
+    this.test = this.store.pipe(select(fromMyStore.selectFeatureScore, {asd: 1}))
+      .subscribe((val) => {
+        console.log('val', val);
+      });
+    this.test2 = this.store.pipe(select(fromMyStore.selectFeatureScore));
     console.warn('test', this.test);
+    console.warn('test2', this.test2);
     // test
 
     // url
@@ -134,7 +138,8 @@ export class MainComponent implements OnInit {
     //   .subscribe((res) => {
     //     console.log('test', res);
     //   });
-    console.log(this.test);
+    // console.log(this.test);
+    this.test.next();
   }
 
 }

@@ -31,6 +31,24 @@ export const initialState: State = {
   gameover: false,
 };
 
+// selector test
+// export const selectScore = (state: State) => state.score;
+// // export const selectFeature = (state: State) => state[fromWord.wordFeatureKey];
+//
+// export const selectWords = () => createSelector(
+//   selectScore,
+//   (score, props) => score + 10
+// );
+// export const selectFeatureScore = createSelector(
+//   selectScore,
+//   (state, props) => {
+//     console.log('state', state);
+//     console.log('props', props);
+//     return state;
+//   }
+// );
+// selector test
+
 export function reducer(state = initialState, action: wordActions.WordActions): State {
   switch (action.type) {
     case wordActions.WordActionTypes.ScoreUp:

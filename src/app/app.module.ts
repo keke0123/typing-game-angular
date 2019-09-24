@@ -12,6 +12,7 @@ import {ApiService} from './service/api/api.service';
 import {HttpClientModule} from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { WordEffects } from './effect/word/word.effects';
+import {reducers} from './store/reducers';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,7 @@ import { WordEffects } from './effect/word/word.effects';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    StoreModule.forRoot({}),
+    StoreModule.forRoot(reducers),
     StoreModule.forFeature(fromMystore.mystoreFeatureKey, fromMystore.reducers, { metaReducers: fromMystore.metaReducers }),
     EffectsModule.forRoot([]),
     EffectsModule.forFeature([WordEffects]),

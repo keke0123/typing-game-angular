@@ -1,4 +1,4 @@
-import {ActionReducerMap, createSelector, MetaReducer} from '@ngrx/store';
+import {ActionReducerMap, createFeatureSelector, createSelector, MetaReducer} from '@ngrx/store';
 import {environment} from '../../../environments/environment';
 import * as fromWord from '../word/word.reducer';
 import {wordFeatureKey} from '../word/word.reducer';
@@ -21,10 +21,20 @@ export const reducers: ActionReducerMap<State> = {
 export const metaReducers: MetaReducer<State>[] = !environment.production ? [] : [];
 
 // selector test
-export const selectScore = (state: State) => state[wordFeatureKey].score;
-export const selectWords = () => createSelector(
+// export const selectFeature = createFeatureSelector<State>(fromWord.wordFeatureKey);
+export const selectScore = (state: State) => state[fromWord.wordFeatureKey].score;
+
+// export const selectWords = () => createSelector(
+//   selectScore,
+//   (state, props) => state
+// );
+export const selectFeatureScore = createSelector(
   selectScore,
-  (score, props) => score + 10
+  (state, props) => {
+    console.log('state', state);
+    console.log('props', props);
+    return state + 10;
+  }
 );
 // export const selectWords = createSelector(
 //   selectScore,
